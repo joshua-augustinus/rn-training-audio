@@ -1,6 +1,7 @@
+import { AudioComponent } from '@src/components/AudioComponent';
 import React, { useEffect } from 'react';
-import { Button, Text, TextInput, TouchableOpacity, View, BackHandler } from 'react-native';
-import { SafeAreaView, StackActions } from 'react-navigation';
+import {  Text,  TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-navigation';
 import { DrawerActions, NavigationDrawerProp } from 'react-navigation-drawer';
 
 /**
@@ -22,18 +23,6 @@ const MasterScreen = (props: Props) => {
         props.navigation.dispatch(DrawerActions.toggleDrawer());
     }
 
-    const onButtonPress = () => {
-        const pushAction = StackActions.push({
-            routeName: 'Stack1',
-            params: {
-                myUserId: 9,
-            },
-        });
-
-        props.navigation.dispatch(pushAction);
-    }
-
-
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ height: 50, backgroundColor: 'red', flexDirection: 'row', alignItems: 'center' }}>
@@ -43,11 +32,10 @@ const MasterScreen = (props: Props) => {
                     <Text>Menu</Text>
                 </TouchableOpacity>
             </View>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding:5 }}>
 
-                <Text>{props.navigation.state.routeName}</Text>
-                <TextInput placeholder="Enter text here..."></TextInput>
-                <Button title="Press me" onPress={() => onButtonPress()}></Button>
+                <AudioComponent />
+
             </View>
         </SafeAreaView>
 
