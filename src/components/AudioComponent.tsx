@@ -81,12 +81,17 @@ const AudioComponent = (props: Props) => {
             }
         });
 
+        getPlayer().on("ended", onEnded);
 
         return (() => {
             getPlayer().stop();
             getPlayer().destroy();
         })
     }, []);
+
+    const onEnded = () => {
+        setIcon("play");
+    }
 
     const seek = (percentage) => {
         if (!getPlayer())
