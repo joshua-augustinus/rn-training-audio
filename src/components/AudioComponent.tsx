@@ -1,6 +1,6 @@
 import { Player } from "@react-native-community/audio-toolkit";
 import React, { useEffect, useRef, useState } from "react"
-import { Text, View } from "react-native"
+import { Alert, StyleSheet, Text, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Slider from '@react-native-community/slider';
@@ -16,6 +16,7 @@ interface Props {
 const AudioComponent = (props: Props) => {
     const [progress, setProgress] = useState(0);
     const [icon, setIcon] = useState<PlayState>("play");
+    const [isReady, setIsReady] = useState(false);
     const localState = useRef(null);
 
     if (localState.current === null) {
@@ -73,6 +74,11 @@ const AudioComponent = (props: Props) => {
             continuesToPlayInBackground: true
         }).prepare((err: any) => {
             console.log("Error", err);
+            if (err) {
+                Alert.alert(err.message);
+            } else {
+                setIsReady(true);
+            }
         });
 
 
@@ -98,17 +104,43 @@ const AudioComponent = (props: Props) => {
         return Date.now() - localState.current.lastSeek > 200;
     }
 
-    return (
-        <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
-            <TouchableOpacity onPress={playToggle}>
-                <View style={{ backgroundColor: 'red', width: 100, height: 100 }}>
-                    <Icon size={24} name={icon}></Icon>
-                </View>
+    if (!isReady) {
+        return <View style={styles.container}></View>;
+    }
+    else {
+        return (
+            <View style={styles.container}>
+                <TouchableOpacity onPress={playToggle}>
+                    <View style={styles.playButton}>
+                        <Icon size={24} name={icon} style={styles.playIcon}></Icon>
+                    </View>
 
-            </TouchableOpacity>
-            <Slider step={0.0001} style={{ flex: 1 }} value={progress} onValueChange={seek} />
-        </View>
-    )
+                </TouchableOpacity>
+                <Slider step={0.0001} style={{ flex: 1 }} value={progress} onValueChange={seek} />
+            </View>
+        )
+    }
+
 }
 
 export { AudioComponent }
+
+
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row', flex: 1, alignItems: 'center'
+    },
+    playButton: {
+        width: 60,
+        height: 60,
+        borderRadius: 60,
+        backgroundColor: '#D1D1D1',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
+    playIcon: {
+        color: '#FFFFFF',
+    },
+
+});
